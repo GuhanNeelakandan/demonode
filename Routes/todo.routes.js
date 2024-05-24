@@ -1,5 +1,5 @@
 const express = require("express");
-const { allTodo, getSingleTodo, deleteTodo, editTodo, newTodo, taskIsCompleted } = require("../Controller/todo.controller");
+const { allTodo, getSingleTodo, deleteTodo, editTodo, newTodo, taskIsCompleted, todoAggregate } = require("../Controller/todo.controller");
 const auth = require("../middleware/auth");
 const router = express.Router();
 
@@ -9,5 +9,6 @@ router.get("/todo/:id",auth,getSingleTodo);
 router.delete("/remove/todo/:id",auth,deleteTodo);
 router.put("/update/todo/:id",auth,editTodo);
 router.post("/complete/todo",auth,taskIsCompleted);
+router.post("/todo/aggregate",todoAggregate);
 
 module.exports=router

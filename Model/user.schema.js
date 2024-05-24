@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema({
     email:{type:String,required:true},
     mobile:{type:Number,required:true},
     password:{type:String,required:true},
-    role:{type:String},
+    role:{type:String,enum:["admin"]},
     otp:{type:Number},
     otpTimeStamp:{type:Number},
     isOtpVerified:{type:Boolean,default:false}
