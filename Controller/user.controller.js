@@ -49,7 +49,7 @@ const login = async (req, res) => {
     }
     let token = jwt.sign({userId:checkUser._id,userName:checkUser.userName,email:checkUser.email},"ABcd123",{expiresIn:'1hr'});// exp
 
-    res.json({ status: 1, message: "Login Successfully",token:token }); //token
+    res.json({ status: 1, message: "Login Successfully",token:token ,user:checkUser}); //token
   } catch (error) {
     console.log("user.controller.js/login ---->error", error);
   }

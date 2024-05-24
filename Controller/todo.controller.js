@@ -114,6 +114,71 @@ const newTodo = async (req, res) => {
     }
   }
 
+  const todoAggregate =async(req,res)=>{
+    try {
+      const {search,skip,limit,checked}=req.body //skip=0 ,limit=3
+
+      let query = []
+
+      if(search!==""){
+        query.push(
+          {
+            $match: {
+              $or: [
+                { task: { $regex: search + '.*', $options: 'si' } },
+              ],
+            },
+          }
+        )
+      }
+
+      if(checked===true){
+        query.push(
+          {
+            $match:{isCompleted:true}
+          }
+        )
+      }
+
+      if(checked===false){
+        query.push({
+          $match:{
+            isCompleted: false
+          }
+        })
+      }
+
+      query.push({
+        $lookup:{ // it will return as array
+          from:'users',
+          localField:'createdBy',
+          foreignField:'_id',
+          as:'client_data'
+        }
+      },
+      { $unwind: { path: '$client_data', preserveNullAndEmptyArrays: true } }
+    )
+
+
+      query.push(
+        {$skip:skip},
+        {$limit:limit}
+      )
+
+      const todoData = await Todo.aggregate(query)
+
+      if(!todoData){
+        return res.json({status:0,message:"No Data found"})
+      }
+
+      res.json({status:1,response:todoData})
+
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   module.exports= {
     newTodo,
@@ -121,6 +186,7 @@ const newTodo = async (req, res) => {
     getSingleTodo,
     deleteTodo,
     editTodo,
-    taskIsCompleted
+    taskIsCompleted,
+    todoAggregate
   }
   
